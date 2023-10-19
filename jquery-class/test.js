@@ -1,5 +1,5 @@
 
-$.Class("Monster",
+Vtiger.Class("Monster",
 // static properties
 {
   count: 0,
