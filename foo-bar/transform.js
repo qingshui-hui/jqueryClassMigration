@@ -1,4 +1,11 @@
 // $ npx jscodeshift -t foo-bar\transform.js foo-bar\test.js
+/**
+ * 
+ * @param {*} fileInfo 
+ * @param {{jscodeshift: import("jscodeshift").JSCodeshift}} param1 
+ * @param {*} options 
+ * @returns 
+ */
 module.exports = function(fileInfo, { jscodeshift }, options) {
   const j = jscodeshift;
   const root = jscodeshift(fileInfo.source);
