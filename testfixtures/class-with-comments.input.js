@@ -1,9 +1,8 @@
-
-Vtiger.Class("Monster",
+// comments
+$.Class("Monster",
 // static properties
 {
-  count: 0,
-  name: 0,
+  count: 0  
 },
 // prototype properties
 {
@@ -16,14 +15,15 @@ Vtiger.Class("Monster",
 
     //increment the static count
     this.Class.count++;
-    const a = {
-      a: 1,
-    }
   },
-  create : function() {
-    
+  eat: function( smallChildren ){
+    this.health += smallChildren;
+  },
+  fight: function() {
+    this.health -= 2;
   }
 })
 
-//create a monster
-var dragon = new Monster('dragon');
+module.exports = {
+  Monster
+}

@@ -13,7 +13,7 @@
             ],
             "program": "${workspaceRoot}/node_modules/.bin/jscodeshift",
             "stopOnEntry": false,
-            "args": ["--dry", "--print", "-t", "${input:transformFile}", "--parser", "${input:parser}", "--run-in-band", "${file}"],
+            "args": ["--dry", "--print", "-t", "${input:transformFile}", "--run-in-band", "${file}"],
             "preLaunchTask": null,
             "runtimeExecutable": null,
             "runtimeArgs": [
@@ -21,7 +21,10 @@
             ],
             "console": "internalConsole",
             "sourceMaps": true,
-            "outFiles": []
+            "outFiles": [],
+            "windows": {
+                "program": "${workspaceRoot}/node_modules/jscodeshift/bin/jscodeshift.js",
+            }
         },
         {
             "name": "Debug All JSCodeshift Jest Tests",
@@ -56,7 +59,7 @@
             "type": "promptString",
             "id": "transformFile",
             "description": "jscodeshift transform file",
-            "default": "transform.js"
+            "default": "src/transform.js"
         }
     ]
 }
