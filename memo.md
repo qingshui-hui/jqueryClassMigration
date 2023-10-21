@@ -1,9 +1,11 @@
 
-$ npx jscodeshift -t object-assign\transform.js object-assign\test-after.js
+F-RevoCRMのlayoutsをダウンロード
 
-## 疑問集
-
-グローバルスコープの関数呼び出しだけ検索できるか？
-⇒path.scope.isGlobal
-
-第2引数のオブジェクトの
+```bash
+git clone --no-checkout --depth=1 https://github.com/thinkingreed-inc/F-RevoCRM.git frevocrm
+cd frevocrm
+git config core.sparsecheckout true
+git sparse-checkout set /layouts/v7/modules
+git sparse-checkout set /layouts/v7/resources
+git checkout
+```
