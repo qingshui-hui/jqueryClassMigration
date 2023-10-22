@@ -1,6 +1,6 @@
 // $ npx jscodeshift -t src/transform.js testfixtures/class-with-comments.input.js -d -p
 
-const { addComments, convertPropertiesForClass, removeOuterParentheses } = require('./utils')
+const { replaceJqueryClassDeclaration, removeOuterParentheses } = require('./utils')
 
 /**
  * @param {import("jscodeshift").FileInfo} fileInfo 
@@ -26,28 +26,7 @@ module.exports = function(fileInfo, api, options) {
 
     const node = path.value
     const { className, baseClassName } = getNewClassInfo(j, path)
-    /** @type {import("jscodeshift").ObjectExpression} */
-    const staticProperties = node.arguments[1]
-    if (staticProperties.properties.length > 0) {
-      addComments(staticProperties.properties[0], staticProperties.comments)
-    }
-
-    const classProperties = convertPropertiesForClass(j, staticProperties.properties, true)
-    if (node.arguments.length === 3) {
-      /** @type {import("jscodeshift").ObjectExpression} */
-      const instanceProperties = node.arguments[2]
-      if (instanceProperties.properties.length > 0) {
-        addComments(instanceProperties.properties[0], instanceProperties.comments)
-      }
-      classProperties.push(...convertPropertiesForClass(j, instanceProperties.properties, false))
-    }
-
-    const classExpression = j.classExpression(
-      j.identifier(className),
-      j.classBody(classProperties),
-      baseClassName ? j.identifier(baseClassName) : null
-    )
-    j(path).replaceWith(classExpression)
+    replaceJqueryClassDeclaration(j, path, className, baseClassName)
     if (options.dry) {
       console.log([
         className,

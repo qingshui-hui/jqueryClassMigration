@@ -1,5 +1,38 @@
 /**
  * @param {import("jscodeshift").JSCodeshift} j 
+ * @param {import("jscodeshift").ASTPath<import("jscodeshift").CallExpression>} path 
+ * @param {string} className 
+ * @param {string} baseClassName 
+ */
+function replaceJqueryClassDeclaration(j, path, className, baseClassName) {
+  const node = path.value
+
+  /** @type {import("jscodeshift").ObjectExpression} */
+  const staticProperties = node.arguments[1]
+  if (staticProperties.properties.length > 0) {
+    addComments(staticProperties.properties[0], staticProperties.comments)
+  }
+
+  const classProperties = convertPropertiesForClass(j, staticProperties.properties, true)
+  if (node.arguments.length === 3) {
+    /** @type {import("jscodeshift").ObjectExpression} */
+    const instanceProperties = node.arguments[2]
+    if (instanceProperties.properties.length > 0) {
+      addComments(instanceProperties.properties[0], instanceProperties.comments)
+    }
+    classProperties.push(...convertPropertiesForClass(j, instanceProperties.properties, false))
+  }
+
+  const classExpression = j.classExpression(
+    j.identifier(className),
+    j.classBody(classProperties),
+    baseClassName ? j.identifier(baseClassName) : null
+  )
+  j(path).replaceWith(classExpression)
+}
+
+/**
+ * @param {import("jscodeshift").JSCodeshift} j 
  * @param {*} properties 
  * @param {boolean} isStatic 
  * @returns 
@@ -112,5 +145,6 @@ function removeCharAt(target, indices) {
 module.exports = {
   addComments,
   removeOuterParentheses,
-  convertPropertiesForClass
+  convertPropertiesForClass,
+  replaceJqueryClassDeclaration
 }
