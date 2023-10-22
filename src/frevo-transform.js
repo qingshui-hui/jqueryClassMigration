@@ -1,4 +1,4 @@
-// $ npx jscodeshift -t src/transform.js testfixtures/class-with-comments.input.js -d -p
+// $ npx jscodeshift -t src/frevo-transform.js testfixtures/VtigerClass.input.js -d -p
 
 const { addComments, convertPropertiesForClass, removeOuterParentheses } = require('./utils')
 
@@ -14,18 +14,26 @@ module.exports = function(fileInfo, api, options) {
   let foundJqueryClass = false
 
   root.find(j.CallExpression).filter((path) => {
-    const ok = path.scope.isGlobal
-      && path.value.arguments
-      && path.value.arguments.length === 3
-      && path.value.arguments[0].type === 'Literal'
-      && path.value.arguments[1].type === 'ObjectExpression'
-      && path.value.arguments[2].type === 'ObjectExpression'
+    if (!path.value.arguments) {
+      return false
+    }
+    const ok = (
+        path.value.arguments.length === 3
+        && path.value.arguments[0].type === 'Literal'
+        && path.value.arguments[1].type === 'ObjectExpression'
+        && path.value.arguments[2].type === 'ObjectExpression'
+      ) || (
+        path.value.arguments.length === 2
+        && path.value.arguments[0].type === 'Literal'
+        && path.value.arguments[1].type === 'ObjectExpression'
+      )
     return ok
   }).forEach(path => {
     foundJqueryClass = true
 
     const node = path.value
     const { className, baseClassName } = getNewClassInfo(j, path)
+    if (!className.endsWith('_Js')) return true
     /** @type {import("jscodeshift").ObjectExpression} */
     const staticProperties = node.arguments[1]
     /** @type {import("jscodeshift").ObjectExpression} */

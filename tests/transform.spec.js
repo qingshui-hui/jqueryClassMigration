@@ -18,7 +18,6 @@ describe('transform.js', () => {
       source: fs.readFileSync(`testfixtures/${fixture}.input.js`, 'utf8')
     }
     const output = applyTransform(module, {}, input, {});
-    console.log(output)
     expectTextEqual(output, expectedOutput)
   });
 });

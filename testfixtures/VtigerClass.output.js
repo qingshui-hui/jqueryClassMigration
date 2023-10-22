@@ -7,7 +7,7 @@
  * All Rights Reserved.
  *************************************************************************************/
 
-class Vtiger_Class {
+class Vtiger_Class_Js {
     addComponent(componentName) {
         if(window[componentName]){
             if(typeof this._components == "undefined") {
