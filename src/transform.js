@@ -28,23 +28,33 @@ module.exports = function(fileInfo, api, options) {
     const { className, baseClassName } = getNewClassInfo(j, path)
     /** @type {import("jscodeshift").ObjectExpression} */
     const staticProperties = node.arguments[1]
-    /** @type {import("jscodeshift").ObjectExpression} */
-    const instanceProperties = node.arguments[2]
     if (staticProperties.properties.length > 0) {
       addComments(staticProperties.properties[0], staticProperties.comments)
     }
-    if (instanceProperties.properties.length > 0) {
-      addComments(instanceProperties.properties[0], instanceProperties.comments)
+
+    const classProperties = convertPropertiesForClass(j, staticProperties.properties, true)
+    if (node.arguments.length === 3) {
+      /** @type {import("jscodeshift").ObjectExpression} */
+      const instanceProperties = node.arguments[2]
+      if (instanceProperties.properties.length > 0) {
+        addComments(instanceProperties.properties[0], instanceProperties.comments)
+      }
+      classProperties.push(...convertPropertiesForClass(j, instanceProperties.properties, false))
     }
+
     const classExpression = j.classExpression(
       j.identifier(className),
-      j.classBody([
-        ...convertPropertiesForClass(j, staticProperties.properties, true),
-        ...convertPropertiesForClass(j, instanceProperties.properties, false),
-      ]),
+      j.classBody(classProperties),
       baseClassName ? j.identifier(baseClassName) : null
     )
     j(path).replaceWith(classExpression)
+    if (options.dry) {
+      console.log([
+        className,
+        baseClassName,
+        `${fileInfo.path.replace('\\', '/')}:${node.loc.start.line}`
+      ].join(', '))
+    }
   });
 
   if (!foundJqueryClass) {
