@@ -1,17 +1,18 @@
 // comments
 class Monster {
-  // static properties
+  /* @static */
   static count = 0;
 
-  // constructor function
-  // prototype properties
+  /* @prototype */
   constructor(name) {
-    //save the name
+
+    // saves name on the monster instance
     this.name = name;
 
-    this.energy = 10;
+    // sets the health
+    this.health = 10;
 
-    //increment the static count
+    // increments count
     this.constructor.count++;
   }
 
@@ -22,8 +23,22 @@ class Monster {
   fight() {
     this.health -= 2;
   }
-}
+};
 
-module.exports = {
-  Monster
+// hydra = new Monster('hydra');
+
+// dragon = new Monster('dragon');
+
+// hydra.name        // -> hydra
+// Monster.count     // -> 2
+// Monster.shortName // -> 'Monster'
+
+// hydra.eat(2);     // health = 12
+
+// dragon.fight();   // health = 8
+
+if (typeof module === "object" && typeof module.exports === "object") {
+  module.exports = {
+    Monster
+  }
 }

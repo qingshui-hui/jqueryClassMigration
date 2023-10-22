@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Before Transform</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="../jqueryClass/jquery.class.min.js"></script>
+</head>
+<body>
+    <script src="../testfixtures/class-with-comments.input.js"></script>
+    <script type="module">
+        console.log('test class-with-comments')
+        const hydra = new Monster('hydra');
+        const dragon = new Monster('dragon');
+    
+        console.assert(hydra.name === 'hydra')
+        console.assert(Monster.count === 2)
+
+        hydra.eat(2);     // health = 12
+        console.assert(hydra.health === 12)
+    
+        dragon.fight();   // health = 8
+        console.assert(dragon.health === 8)
+    </script>
+    <script src="../testfixtures/class-extend.input.js"></script>
+    <script type="module">
+        console.log('test class-extend')
+        console.assert(Second.staticMethod() === 2)
+    </script>
+</body>
+</html>

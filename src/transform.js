@@ -28,7 +28,8 @@ module.exports = function(fileInfo, api, options) {
         baseClass = node.callee.object.name
     } else if (node.callee.object) {
       // for VtigerCRM
-      if (node.callee.object.name === '$') {
+      if (['$', 'jQuery'].includes(node.callee.object.name)
+        && node.callee.property.name === 'Class') {
         baseClass = null
       } else if (node.callee.object.name === 'Vtiger') {
         baseClass = 'Vtiger_Class'
@@ -38,6 +39,10 @@ module.exports = function(fileInfo, api, options) {
       baseClass = node.callee.name
     }
     let className = node.arguments[0].value
+    // for VtigerCRM
+    if (className === 'Vtiger.Class') {
+      className = 'Vtiger_Class'
+    }
     /** @type {import("jscodeshift").ObjectExpression} */
     const staticProperties = node.arguments[1]
     /** @type {import("jscodeshift").ObjectExpression} */
@@ -99,14 +104,15 @@ module.exports = function(fileInfo, api, options) {
   });
 
   if (!foundJqueryClass) {
-    return root.toSource()
+    return root.toSource({lineTerminator: "\n"})
   }
 
   let source = removeOuterParentheses({
     ...fileInfo,
-    source: root.toSource()
+    // タブのインデントが混ざっていると、文字数のカウントで不具合が起こるため 
+    source: root.toSource({reuseWhitespace: false})
   }, api, options)
-  return source;
+  return source.replace(/\r\n/g, "\n");
 };
 
 /**

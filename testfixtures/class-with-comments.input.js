@@ -1,19 +1,20 @@
 // comments
-$.Class("Monster",
-// static properties
+$.Class.extend('Monster',
+/* @static */
 {
-  count: 0  
+  count: 0
 },
-// prototype properties
+/* @prototype */
 {
-  // constructor function
-  init : function(name){
-    //save the name
+  init: function( name ) {
+
+    // saves name on the monster instance
     this.name = name;
 
-    this.energy = 10;
+    // sets the health
+    this.health = 10;
 
-    //increment the static count
+    // increments count
     this.Class.count++;
   },
   eat: function( smallChildren ){
@@ -22,8 +23,22 @@ $.Class("Monster",
   fight: function() {
     this.health -= 2;
   }
-})
+});
 
-module.exports = {
-  Monster
+// hydra = new Monster('hydra');
+
+// dragon = new Monster('dragon');
+
+// hydra.name        // -> hydra
+// Monster.count     // -> 2
+// Monster.shortName // -> 'Monster'
+
+// hydra.eat(2);     // health = 12
+
+// dragon.fight();   // health = 8
+
+if (typeof module === "object" && typeof module.exports === "object") {
+  module.exports = {
+    Monster
+  }
 }

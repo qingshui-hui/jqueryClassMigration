@@ -1,22 +1,21 @@
-const fs = require('fs');
 const { Monster } = require('../testfixtures/class-with-comments.output');
-const { SeaMonster, Second } = require('../testfixtures/class-extend.output');
+const { Second } = require('../testfixtures/class-extend.output');
 
 describe('transformed', () => {
-  let fixture = ''
-  it(`transformed correctly ${fixture}`, () => {
+  it(`transformed correctly class-with-comments`, () => {
+    const hydra = new Monster('hydra');
     const dragon = new Monster('dragon');
-    expect(dragon.name).toEqual('dragon')
-    expect(Monster.count).toEqual(1)
+    expect(hydra.name).toEqual('hydra')
+    expect(Monster.count).toEqual(2)
+    
+    hydra.eat(2)
+    expect(hydra.health).toEqual(12)
+
+    dragon.fight()
+    expect(dragon.health).toEqual(8)
   });
 
-  fixture = ''
-  it(`transformed correctly ${fixture}`, () => {
-    lockNess = new SeaMonster("Lock Ness");
-    console.log(lockNess)
-    lockNess.eat(4); //health = 12
-    lockNess.fight(); //health = 11
-
-    Second.staticMethod() // -> 2
+  it(`transformed correctly class-extend`, () => {
+    expect(Second.staticMethod()).toEqual(2)
   });
 });
